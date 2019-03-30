@@ -1,0 +1,7 @@
+.idea
+bin
+.settings
+.classpath
+.project
+DD.mgc
+TestC2Client.iml
