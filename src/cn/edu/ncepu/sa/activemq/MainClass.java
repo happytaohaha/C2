@@ -56,17 +56,18 @@ public class MainClass {
 //		cal.AddWorkItem("sin");
 //		cal.StartWork();
 
-		Calhappytaohaha calhappytaohaha =new Calhappytaohaha("118.230.232.226", 61616, "admin", "admin");
-		calhappytaohaha.AddWorkItem("+,2,3");
-		calhappytaohaha.AddWorkItem("-,1");
-		calhappytaohaha.AddWorkItem("+,109");
-		calhappytaohaha.AddWorkItem("*,2");
-		calhappytaohaha.AddWorkItem("sin");
-		calhappytaohaha.StartWork();
+//		Calhappytaohaha calhappytaohaha =new Calhappytaohaha("118.230.232.226", 61616, "admin", "admin");
+//		calhappytaohaha.AddWorkItem("+,2,3");
+//		calhappytaohaha.AddWorkItem("-,1");
+//		calhappytaohaha.AddWorkItem("+,109");
+//		calhappytaohaha.AddWorkItem("*,2");
+//		calhappytaohaha.AddWorkItem("sin");
+//		calhappytaohaha.StartWork();
+//
+//		System.out.println("Calhappytaohaha is working...");
 
-		System.out.println("Calhappytaohaha is working...");
-		
-		
+
+
 //		 发送器
 		//Sender sender= new Sender("118.230.232.226", 61616, "admin", "admin");
 		
@@ -75,35 +76,40 @@ public class MainClass {
 //		 随机数发送器
 		//Random ran = new Random();
 
-		//System.out.println("System is runing, press 'x' to exit.");
+
 
 		while(toWrok){
 			try {
-				String s1;
-				int flag = 0;
-				System.out.println("请输入一个计算任务");
-				Scanner scanner = new Scanner(System.in);
-				s1 = scanner.nextLine();
-				StringBuffer s2 =new StringBuffer();
+//				String s1;
+//				int flag = 0;
+//				System.out.println("请输入一个计算任务");
+//				Scanner scanner = new Scanner(System.in);
+//				s1 = scanner.nextLine();
+//				StringBuffer s2 =new StringBuffer();
 
 				//对 s1 解析
-				int len =s1.length();
-				for(int i = 0; i < len; i++){
-					char a =s1.charAt(i);
-					switch (a){
-						case '+':
-							break;
-						case '*':
-							break;
-						default:
+//				int len =s1.length();
+//				for(int i = 0; i < len; i++){
+//					char a =s1.charAt(i);
+//					switch (a){
+//						case '+':
+//							break;
+//						case '*':
+//							break;
+//						default:
+//
+//							break;
+//					}
+//				}
 
-							break;
-					}
-				}
+				//改进之后的
+				System.out.println("请输入计算任务:");
+				Scanner scanner =new Scanner(System.in);
+				String string = scanner.nextLine();
+				CalA calA = new CalA("118.230.232.226", 61616, "admin", "admin",string);
+				calA.StartWork();
+				System.out.println("Calculator is working...");
 
-				//放入队列
-
-				//进行计算
 
 
 
@@ -120,14 +126,14 @@ public class MainClass {
 //					sender.SendAMsg(add.queue, msg, "Cal");
 //					System.out.println("I have send:"+msg+",you can see answer "+String.valueOf(x+y)+" in Queue Cal");
 //				}
-
+				System.out.println("System is runing, press 'x' to exit.");
 				try {
 					int xx = System.in.read();
 					if(xx == 'x'){
-						calhappytaohaha.StopWork();
+//						calhappytaohaha.StopWork();
 						sub.StopWork();
 						add.StopWork();
-
+						calA.StopWork();
 						System.out.println("Bye...");
 						toWrok = false;
 					}
