@@ -8,7 +8,7 @@ import java.util.Stack;
 import javax.jms.JMSException;
 import javax.jms.TextMessage;
 
-public class CalA extends C2Component {
+public class CalA extends Cal {
 
 	private String calAString;
 	public CalA(String host, int port, String user, String pwd) {
@@ -22,31 +22,8 @@ public class CalA extends C2Component {
 		// TODO Auto-generated constructor stub
 	}
 	
-	
-	private void sendASubTask(String msg) {
-		String tmp[] = msg.split(",");
-		switch (tmp[0]) {
-		case "+":
-			sender.SendAMsg("Add", msg, queue);
-			break;
-		case "-":
-			sender.SendAMsg("Sub", msg, queue);
-			break;
-		case "*":
-			sender.SendAMsg("Mul", msg, queue);
-			break;
-		case "/":
-			sender.SendAMsg("Div", msg, queue);
-			break;
-		case "sin":
-			sender.SendAMsg("Sin", msg, queue);
-			break;
 
-		default:
-			break;
-		}
 
-	}
 
 	/**
 	 * 开始工作
@@ -58,6 +35,7 @@ public class CalA extends C2Component {
 	}
 
 	/**
+	 * //todo 如果只有一个计算
 	 * 进行分析
 	 */
 	@Override
@@ -78,27 +56,44 @@ public class CalA extends C2Component {
 			if(flag) {
 				for ( ;i < result.size(); i++) {
 					if(Character.isDigit(result.get(i).charAt(0))){
-						stack.push(Integer.parseInt(result.get(i)));
+						stack.push(Double.parseDouble(result.get(i)));
 					}else{			
 						flag = false;
-						Integer back = (Integer)stack.pop();
-						Integer front = (Integer)stack.pop();
+						Double back;
+						Double front;
 						String next="";
 						switch (result.get(i).charAt(0)) {
 							case '+':
+								back = (Double)stack.pop();
+								front = (Double)stack.pop();
 								next = "+,"+front+","+back;
-								System.out.println(next);
+
 								break;
 							case '-':
+								back = (Double)stack.pop();
+								front = (Double)stack.pop();
 								next = "-,"+front+","+back;					
 								break;
 							case '*':
+								back = (Double)stack.pop();
+								front = (Double)stack.pop();
 								next = "*,"+front+","+back;
 								break;
 							case '/':
+								back = (Double)stack.pop();
+								front = (Double)stack.pop();
 								next = "/,"+front+","+back;
 								break;
+							case 's':
+								front = (Double)stack.pop();
+								next = "sin,"+front;
+								break;
+							case 'c':
+								front = (Double)stack.pop();
+								next = "cos,"+front;
+								break;
 						}
+						System.out.println(next);
 						sendASubTask(next);
 						i++;
 						break;
@@ -125,28 +120,44 @@ public class CalA extends C2Component {
 					TextMessage msg = reciever.msgList.poll();
 					try {
 						returnResult = msg.getText();
-						stack.push(Integer.parseInt(returnResult));
+						stack.push(Double.parseDouble(returnResult));
 						for ( ;i < result.size(); i++) {
 							if(Character.isDigit(result.get(i).charAt(0))){
-								stack.push(Integer.parseInt(result.get(i)));
+								stack.push(Double.parseDouble(result.get(i)));
 							}else{			
 								flag = false;
-								Integer back = (Integer)stack.pop();
-								Integer front = (Integer)stack.pop();
+								Double back;
+								Double front;
 								String next="";
 								switch (result.get(i).charAt(0)) {
 									case '+':
+										back = (Double)stack.pop();
+										front = (Double)stack.pop();
 										next = "+,"+front+","+back;
 										System.out.println(next);
 										break;
 									case '-':
-										next = "-,"+front+","+back;					
+										back = (Double)stack.pop();
+										front = (Double)stack.pop();
+										next = "-,"+front+","+back;
 										break;
 									case '*':
+										back = (Double)stack.pop();
+										front = (Double)stack.pop();
 										next = "*,"+front+","+back;
 										break;
 									case '/':
+										back = (Double)stack.pop();
+										front = (Double)stack.pop();
 										next = "/,"+front+","+back;
+										break;
+									case 's':
+										back = (Double)stack.pop();
+										next = "sin,"+back;
+										break;
+									case 'c':
+										back = (Double)stack.pop();
+										next = "cos,"+back;
 										break;
 								}
 								sendASubTask(next);

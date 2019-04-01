@@ -28,10 +28,17 @@ public class MainClass {
 		Mul mul = new Mul("118.230.232.226", 61616, "admin", "admin");
 		mul.StartWork();
 		System.out.println("Mul is working...");
-		//Div div = new Div("118.230.232.226", 61616, "admin", "admin");
+		Div div = new Div("118.230.232.226", 61616, "admin", "admin");
+		div.StartWork();
+		System.out.println("div is working...");
 
 		Sin sin = new Sin("118.230.232.226", 61616, "admin", "admin");
 		sin.StartWork();
+		System.out.println("sin is working...");
+
+		Cos cos = new Cos("118.230.232.226", 61616, "admin", "admin");
+		cos.StartWork();
+		System.out.println("cos is working...");
 
 //		Add add = new Add("localhost", 61616, "admin", "admin");
 //		add.StartWork();

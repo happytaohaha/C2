@@ -7,7 +7,7 @@ import javax.jms.JMSException;
 import javax.jms.TextMessage;
 
 public class Cal extends C2Component {
-
+	private String calString;
 	/**
 	 * 工作任务列表
 	 */
@@ -18,26 +18,39 @@ public class Cal extends C2Component {
 		// TODO Auto-generated constructor stub
 	}
 
+	public Cal(String host, int port, String user, String pwd,String calAString) {
+		super(host, port, user, pwd, "Cal");
+		this.calString = calString;
+		// TODO Auto-generated constructor stub
+	}
+
 	public void AddWorkItem(String work) {
 
 		workList.offer(work);
 	}
 	//在这增加计算东西
-	private void sendASubTask(String msg) {
+	//发送子任务时需要增加新的队列
+	protected void sendASubTask(String msg) {
 		String tmp[] = msg.split(",");
 		switch (tmp[0]) {
-		case "+":
-			sender.SendAMsg("Add", msg, queue);
-			break;
-		case "-":
-			sender.SendAMsg("Sub", msg, queue);
-			break;
-		case "*":
-			sender.SendAMsg("Mul", msg, queue);
-			break;
-		case "sin":
-			sender.SendAMsg("Sin", msg, queue);
-			break;
+			case "+":
+				sender.SendAMsg("Add", msg, queue);
+				break;
+			case "-":
+				sender.SendAMsg("Sub", msg, queue);
+				break;
+			case "*":
+				sender.SendAMsg("Mul", msg, queue);
+				break;
+			case "/":
+				sender.SendAMsg("Div", msg, queue);
+				break;
+			case "sin":
+				sender.SendAMsg("Sin", msg, queue);
+				break;
+			case "cos":
+				sender.SendAMsg("Cos", msg, queue);
+				break;
 		default:
 			break;
 		}

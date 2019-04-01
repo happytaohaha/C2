@@ -14,6 +14,7 @@ import java.util.Stack;
 public class Anaylsis {
 	
 	/**
+	 * 修改增加字母
 	 * 将字符串转化成List
 	 * @param str
 	 * @return
@@ -21,10 +22,18 @@ public class Anaylsis {
 	public ArrayList<String> getStringList(String str){
 		ArrayList<String> result = new ArrayList<String>();
 		String num = "";
+		String suanfu = "";
 		for (int i = 0; i < str.length(); i++) {
 			if(Character.isDigit(str.charAt(i))){
 				num = num + str.charAt(i);
+			}else if(Character.isAlphabetic(str.charAt(i))){//增加字母
+				suanfu = suanfu + str.charAt(i);
 			}else{
+				//先处理算符 再处理 数字
+				if(suanfu != ""){
+					result.add(suanfu);
+					suanfu = "";
+				}
 				if(num != ""){
 					result.add(num);
 				}
@@ -38,7 +47,7 @@ public class Anaylsis {
 		return result;
 	}
 	
-	/**
+	/** 增加sin
 	 * 将中缀表达式转化为后缀表达式
 	 * @param inOrderList
 	 * @return
@@ -53,24 +62,31 @@ public class Anaylsis {
 			}else{
 				switch (inOrderList.get(i).charAt(0)) {
 				case '(':
+					//把(放进去
 					stack.push(inOrderList.get(i));
 					break;
 				case ')':
-					while (!stack.peek().equals("(")) {
+					//增加sin
+					while (!stack.peek().equals("(") && !stack.peek().equals("sin") &&!stack.peek().equals("sin") ) {
 						result.add(stack.pop());
 					}
+					//弹出(
 					stack.pop();
 					break;
 				default:
+					//比较当前符号和栈内的符号进行比较   当前优先级小返回 true   将比他大的都扔进去
 					while (!stack.isEmpty() && compare(stack.peek(), inOrderList.get(i))){
+						//直接弹出增加
 						result.add(stack.pop());
 					}
+					//增加这个
 					stack.push(inOrderList.get(i));
 					break;
 				}
 			}
 		}
 		while(!stack.isEmpty()){
+			//将所有的扔出来
 			result.add(stack.pop());
 		}
 		return result;
@@ -125,23 +141,29 @@ public class Anaylsis {
 			if(Character.isDigit(postOrder.get(i).charAt(0))){
 				stack.push(Integer.parseInt(postOrder.get(i)));
 			}else{
-				
+				//todo 如果只有一个计算
 				if(flag==0) {
 				Integer back = (Integer)stack.pop();
 				Integer front = (Integer)stack.pop();
 				switch (postOrder.get(i).charAt(0)) {
-				case '+':
-					resultList.add("+,"+front+","+back);
-					break;
-				case '-':
-					resultList.add("-,"+front+","+back);
-					break;
-				case '*':
-					resultList.add("*,"+front+","+back);
-					break;
-				case '/':
-					resultList.add("/,"+front+","+back);
-					break;
+					case '+':
+						resultList.add("+,"+front+","+back);
+						break;
+					case '-':
+						resultList.add("-,"+front+","+back);
+						break;
+					case '*':
+						resultList.add("*,"+front+","+back);
+						break;
+					case '/':
+						resultList.add("/,"+front+","+back);
+						break;
+					case 's':
+						resultList.add("sin,"+front);
+						break;
+					case 'c':
+						resultList.add("cos,"+front);
+						break;
 				}
 				flag++;
 				}else {
@@ -160,6 +182,12 @@ public class Anaylsis {
 					case '/':
 						resultList.add("/,"+front);
 						break;
+					case 's':
+						resultList.add("sin,"+front);
+						break;
+					case 'c':
+						resultList.add("cos,"+front);
+						break;
 					}
 				}
 			}
@@ -168,12 +196,19 @@ public class Anaylsis {
 	}
 	/**
 	 * 比较运算符等级
+	 * 前一个和当前的进行比较  前一个和当前的优先级相等或者
 	 * @param peek
 	 * @param cur
 	 * @return
 	 */
 	public static boolean compare(String peek, String cur){
-		if("*".equals(peek) && ("/".equals(cur) || "*".equals(cur) ||"+".equals(cur) ||"-".equals(cur))){
+
+		if("sin".equals(peek) && ("cos".equals(cur) ||"sin".equals(cur) ||"/".equals(cur) || "*".equals(cur) ||"+".equals(cur) ||"-".equals	(cur))){
+			return true;
+		}else if("cos".equals(peek) && ("cos".equals(cur) ||"sin".equals(cur) ||"/".equals(cur) || "*".equals(cur) ||"+".equals(cur) ||"-".equals	(cur))){
+			return true;
+		}
+		else if("*".equals(peek) && ("/".equals(cur) || "*".equals(cur) ||"+".equals(cur) ||"-".equals(cur))){
 			return true;
 		}else if("/".equals(peek) && ("/".equals(cur) || "*".equals(cur) ||"+".equals(cur) ||"-".equals(cur))){
 			return true;

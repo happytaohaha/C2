@@ -12,7 +12,14 @@ public class Div  extends C2Component  {
 
     @Override
     String getResult(String msg) {
-
+        String[] tmp = msg.split(",");
+        if (tmp.length >= 3) {
+            if (tmp[0].equals("/")) {
+                Double x = Double.parseDouble(tmp[1]);
+                Double y = Double.parseDouble(tmp[2]);
+                return String.valueOf((x / y));
+            }
+        }
 
 
         return null;

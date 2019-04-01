@@ -12,8 +12,8 @@ public class Sub extends C2Component {
 		String[] tmp = msg.split(",");
 		if (tmp.length >= 3) {
 			if (tmp[0].equals("-")) {
-				int x = Integer.parseInt(tmp[1]);
-				int y = Integer.parseInt(tmp[2]);
+				Double x = Double.parseDouble(tmp[1]);
+				Double y = Double.parseDouble(tmp[2]);
 				return String.valueOf((x - y));
 			}
 		}
