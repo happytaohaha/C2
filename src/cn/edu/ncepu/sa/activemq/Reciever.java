@@ -3,6 +3,7 @@ package cn.edu.ncepu.sa.activemq;
 import java.awt.List;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Stack;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -77,6 +78,11 @@ public class Reciever extends Thread {
 	 */
 	java.util.Queue<TextMessage> msgList = new LinkedList<TextMessage>();
 
+
+	/**
+	 * 收到的消息栈
+	 */
+	Stack<TextMessage> msgstack=new Stack<TextMessage>();
 	/**
 	 * 构造函数
 	 * @param host 主机名/IP
@@ -144,6 +150,9 @@ public class Reciever extends Thread {
 
 						// 消息加入队列
 						msgList.offer(textMessage);
+
+						//消息加入栈
+						msgstack.push(textMessage);
 
 					}
 				}

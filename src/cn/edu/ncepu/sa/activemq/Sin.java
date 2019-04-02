@@ -6,7 +6,6 @@ import java.math.*;
  */
 
 public class Sin extends C2Component {
-     static final double  PAI = Math.acos(-1);
     public Sin(String host, int port, String user, String pwd) {
         super(host, port, user, pwd, "Sin");
         // TODO Auto-generated constructor stub
@@ -20,8 +19,7 @@ public class Sin extends C2Component {
             if (tmp[0].equals("sin")) {
 
                 double x = Double.parseDouble(tmp[1]);
-                x= x * PAI / 180;
-                return String.valueOf(Math.sin(x));
+                return String.format("%.2f",Math.sin(x * Math.PI / 180));
             }
         }
         return null;

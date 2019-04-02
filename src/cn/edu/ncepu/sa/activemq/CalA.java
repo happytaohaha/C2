@@ -1,8 +1,6 @@
 package cn.edu.ncepu.sa.activemq;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Scanner;
 import java.util.Stack;
 
 import javax.jms.JMSException;
@@ -35,17 +33,16 @@ public class CalA extends Cal {
 	}
 
 	/**
-	 * //todo 如果只有一个计算
 	 * 进行分析
 	 */
 	@Override
 	public void run() {
 		String returnResult = "100";
-		Anaylsis calculate = new Anaylsis();
+		Analysis calculate = new Analysis();
 //		System.out.println("请输入计算任务:");
 //		Scanner scanner =new Scanner(System.in);
 //		String string = scanner.nextLine();
-	    // String string="1*2+3*4"; 
+	    // String string="1*2+3*4";
 		ArrayList<String> result = calculate.getStringList(calAString);//String转换为List
 		result = calculate.getPostOrder(result);   //中缀变后缀
 		System.out.println(result);

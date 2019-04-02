@@ -18,8 +18,7 @@ public class Cos extends C2Component {
         if (tmp.length >= 2) {
             if (tmp[0].equals("cos")) {
                 Double x = Double.parseDouble(tmp[1]);
-                x= x * Math.PI / 180;
-                return String.valueOf(Math.cos(x));
+                return String.format("%.2f",Math.cos(x * Math.PI / 180));
             }
         }
         return null;

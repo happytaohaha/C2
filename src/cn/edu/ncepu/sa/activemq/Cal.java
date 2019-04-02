@@ -70,47 +70,99 @@ public class Cal extends C2Component {
 		}
 		
 	}
-
 	@Override
 	public void run() {
 
 		while (toWork) {
 			if (null != reciever) {
 
-				// 接收器对了中是否消息系
-				if (reciever.msgList.size() > 0) {
+				String result = "";
 
-					// 取出一个消息
-					TextMessage msg = reciever.msgList.poll();
-					String result;
-					try {
-						result = msg.getText();
-					} catch (JMSException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-						result = null;
-					}
+				if (workList.size() > 0) {
+					// 判断工作队列还有没工作项
+					String next = workList.poll();
+					String[] unit = next.split(",");
+					if (unit.length >= 3) {
+						// 工作项有三项，说明将产生两个回填，则不从receiver的消息列表中取result
+						sendASubTask(next);
+					} else {
+						// 工作项只有一项或两项，比如(+,1,result),(+,result1,result2)
 
-					if (workList.size() > 0) {
+						if (reciever.msgstack.size() > 0) {
+							// 从存储返回值的栈中取出栈顶result
+							TextMessage msg = reciever.msgstack.pop();
+
+							try {
+								result = msg.getText();
+							} catch (JMSException e1) {
+								e1.printStackTrace();
+								result = null;
+							}
+						}
+
 						if (null != result) {
-							String next = workList.poll();
-							next += "," + result;
+							if (next.charAt(0) == '1') {
+								// 第一个标志位为1，表示第1个操作数为result
+								int index = 1;
+								while (index < next.length()
+										&& next.charAt(index) != ',') {
+									index++;
+								}
+								// 取操作符
+								String next1 = next.substring(1, ++index);
+								// 取第二个操作数
+								String next2 = next.substring(index,
+										next.length());
+								// 将result插入中间
+								next = next1 + result + "," + next2;
+							} else if (next.charAt(0) == '2') {
+								// 第二个操作数为result,将result加到后面
+								next = next.substring(1, next.length());
+								next += "," + result;
+							} else if (next.charAt(0) == '3') {
+
+								// 只有操作符，说明两个操作数都是result，再从receiver队列中取出一个消息
+								// 回填两次
+								String result1 = "";
+								if (reciever.msgstack.size() > 0) {
+									TextMessage msg1 = reciever.msgstack.pop();
+
+									try {
+										result1 = msg1.getText();
+									} catch (JMSException e1) {
+										e1.printStackTrace();
+										result1 = null;
+									}
+								}
+								next = next.substring(1, next.length());
+								next = next + "," + result1 + "," + result;
+							}// else 标志位为空，直接提交
+
 							sendASubTask(next);
 						}
 
-					} else {
-						System.out.println("Work over:" + result);
 					}
-
+				} else {
+					if (reciever.msgstack.size() > 0) {
+						try {
+							result = reciever.msgstack.pop().getText();
+							toWork = false;
+							System.out.println("Work over:" + result);
+						} catch (JMSException e) {
+							e.printStackTrace();
+						}
+					}
+					// 判断接收队列中有无消息
+					else {
+						System.out.println("Work over:" + "error");
+					}
 				}
-			}
-
-			// 休眠0.1秒
-			try {
-				sleep(100);
-			} catch (Exception e) {
-				// TODO: handle exception
-				e.printStackTrace();
+				// 休眠0.1秒
+				try {
+					sleep(100);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
