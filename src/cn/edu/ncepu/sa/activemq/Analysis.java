@@ -70,12 +70,26 @@ public class Analysis {
 				endIndex = index;
 				//就是当前字符
 				result.add(exp.substring(beginIndex, endIndex + 1));
-			} else if (temp == 's' || temp == 'c') {
+			} else if (temp == 's' ) {
 				// 是sin或者cos
 				index += 2;// 后移两位
 
 				endIndex = index + 1;
+				if(!exp.substring(beginIndex, endIndex).equals("sin")){
+					return null;
+				}
 				result.add(exp.substring(beginIndex, endIndex));
+			}else if(temp == 'c'){
+				index += 2;// 后移两位
+
+				endIndex = index + 1;
+				if(!exp.substring(beginIndex, endIndex).equals("cos")){
+					return null;
+				}
+				result.add(exp.substring(beginIndex, endIndex));
+			}
+			else{
+				return null;
 			}
 			index++;// 后移一个字符
 		}
@@ -94,7 +108,9 @@ public class Analysis {
 	public ArrayList<String> getPostOrder(ArrayList<String> inOrderList){
 		
 		ArrayList<String> result = new ArrayList<String>();
-
+		if(null ==inOrderList){
+			return null;
+		}
 		for (int i = 0; i < inOrderList.size(); i++) {
 			if(Character.isDigit(inOrderList.get(i).charAt(0))){
 				result.add(inOrderList.get(i));
@@ -125,6 +141,9 @@ public class Analysis {
 		}
 		while(!stack.isEmpty()){
 			//将所有的扔出来
+			if(stack.peek().equals("(")){
+				return null;
+			}
 			result.add(stack.pop());
 		}
 		return result;
@@ -197,7 +216,8 @@ public class Analysis {
 
 	static ArrayList<String> target = new ArrayList<String>();// 三元组
 	/**
-	 *
+	 * 自己程序并未使用下面程序，因为不能预测消息到达的顺序
+	 * 但是如果想要解决的话判断 信息如果是result 的话线程进行等待处理，但是还是感觉不行
 	 * @param post
 	 * @return 返回工作项
 	 */
